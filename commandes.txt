@@ -1,0 +1,91 @@
+# Construction de l'image frontend
+docker build -t contacts-frontend ./frontend
+
+# Construction de l'image base de données
+docker build -t contacts-db ./database
+
+# Vérification des images créées
+docker images
+
+# Création du réseau personnalisé
+docker network create contacts-network
+
+# Vérification du réseau
+docker network ls
+
+# Démarrage du conteneur Base de Données
+docker run -d --name db-container --network contacts-network -p 3307:3306 -e MYSQL_ROOT_PASSWORD=rootpassword e MYSQL_DATABASE=contacts_db contacts-db
+
+# Démarrage du conteneur Frontend
+docker run -d --name frontend-container --network contacts-network -p 3000:3000 -e DB_HOST=db-container contacts-frontend
+
+# Vérification des conteneurs en cours d'exécution
+docker ps
+
+# Vérification détaillée des conteneurs
+docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}\t{{.Status}}"
+
+# Test de communication entre conteneurs
+docker exec -it frontend-container ping db-container
+
+# Consultation des logs du frontend
+docker logs frontend-container
+
+# Consultation des logs de la base de données
+docker logs db-container
+
+# Test de connexion à la base de données
+docker exec -it db-container mysql -u root -prootpassword -e "USE contacts_db; SHOW TABLES;"
+
+# Vérification des données initiales
+docker exec -it db-container mysql -u root -prootpassword -e "USE contacts_db; SELECT * FROM contacts;"
+
+# Test de l'application web
+curl http://localhost:3000/contacts || echo "Test de l'API contacts"
+
+# Arrêt des conteneurs
+docker stop frontend-container db-container
+
+# Suppression des conteneurs
+docker rm frontend-container db-container
+
+# Suppression du réseau (après arrêt des conteneurs)
+docker network rm contacts-network
+
+# Nettoyage des images 
+docker rmi contacts-frontend contacts-db
+
+# Inspection d'un conteneur
+docker inspect frontend-container
+
+# Inspection du réseau
+docker network inspect contacts-network
+
+# Processes dans un conteneur
+docker top frontend-container
+
+# Utilisation des ressources
+docker stats
+
+# Shell dans un conteneur
+docker exec -it frontend-container sh
+
+# Connexion à la base de données
+docker exec -it db-container mysql -u root -prootpassword contacts_db
+
+# Démarrage avec Docker Compose
+docker-compose up -d
+
+# Vérification avec Docker Compose
+docker-compose ps
+
+# Logs avec Docker Compose
+docker-compose logs
+docker-compose logs frontend
+docker-compose logs db
+
+# Arrêt avec Docker Compose
+docker-compose down
+
+# Reconstruction avec Docker Compose
+docker-compose up -d --build

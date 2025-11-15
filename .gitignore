@@ -1,0 +1,17 @@
+# Microsoft Word files
+*.docx
+*.doc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
