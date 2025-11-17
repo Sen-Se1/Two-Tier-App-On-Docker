@@ -40,3 +40,6 @@ networks:
   contacts-network:
     driver: bridge
     name: contacts-network
+
+volumes:
+  db-data:
