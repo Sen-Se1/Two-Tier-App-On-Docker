@@ -3,10 +3,13 @@ version: '3.8'
 services:
   db:
     build: ./database
+    image: db-container-image
     container_name: db-container
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: contacts_db
+    volumes:
+      - db-data:/var/lib/mysql
     ports:
       - "3307:3306"
     networks:
@@ -20,6 +23,7 @@ services:
 
   frontend:
     build: ./frontend
+    image: frontend-container-image
     container_name: frontend-container
     environment:
       DB_HOST: db-container
